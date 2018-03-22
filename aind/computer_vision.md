@@ -3,11 +3,11 @@
 ## Lesson 6 - Mimic Me!
 Project: [AIND-CV-Mimic](https://github.com/udacity/AIND-CV-Mimic)
 
-<br/>
+
 ## Lesson 7 - Image Representation and Analysis
 Computer Vision used in AI systems to visually perceive the world by gathering images, analyzing data, and eventually responding to it.
 
-<br/>
+
 #### Computer Vision Pipeline
 1. Input Data
 	* Images or Images Frame  
@@ -25,7 +25,7 @@ Computer Vision used in AI systems to visually perceive the world by gathering i
 	* Emotion Prediction
 6. ACTION!  
 
-<br>
+
 #### Pre-Processing
 - all about making an image or sets of images easier to analyze and process computationally.
 - 2 purposes:
@@ -34,9 +34,8 @@ Computer Vision used in AI systems to visually perceive the world by gathering i
 
 Color to Grayscale:  
 	1. Grayscale is more useful in recognizing objects.  
-	2. Color images are harder to analyze and wake up more space in memory.
+	2. Color images are harder to analyze and wake up more space in memory.  
 
-<br>
 #### Intensity
 - measure of lightness and darkness in an image
 - Patterns in lightness and darkness define the shape and characteristics of many objects
@@ -44,12 +43,12 @@ Color to Grayscale:
 
 Most simple identification tasks rely on identifying the shape and intensity patterns in objects, and grayscale images provide this information
 
-<br>
+
 #### When is Color Important?  
 - In general, if objects or traits are easier to identify in color for us humans, it's better to provide color images to algorithms
 - e.g. computer-aided diagnostics - color can be a good indicator of health, illnesss or other condition
 
-<br>
+
 #### Images as Functions
 - treating images as functions is the basis for many image processing techniques
 - e.g. geometrically warping the size and apparent shape of an image, changing appearance from color to grayscale
@@ -58,7 +57,7 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - image coordinate system: images are 2 dimensional and lie on the x-y plane, origin (0, 0) is at the top left of the image
 
 
-<br>
+
 ## Lesson 8 - Image Segmentation
 #### Image Segmentation:
 - The process of dividing an image into segments or unique areas of interest
@@ -103,7 +102,7 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 	4. Repeats steps 2 and 3 until *convergence* is reached
 - convergence is defined by us - either by number of iterations or number of times center points have moved
 
-<br>
+
 ## Links
 - [Affectiva's JS SDK documentation](https://affectiva.readme.io/docs/getting-started-with-the-emotion-sdk-for-javascript)
 - [Image Coordinat Systems - Matlab documentation](https://www.mathworks.com/help/images/image-coordinate-systems.html)
