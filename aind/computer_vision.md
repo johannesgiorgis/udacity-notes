@@ -6,22 +6,22 @@ Project: [AIND-CV-Mimic](https://github.com/udacity/AIND-CV-Mimic)
 ## Lesson 7 - Image Representation and Analysis
 - computer vision used in AI systems to visually perceive the world by gathering images, analyzing data, and eventually responding to it.
 
-Computer Vision Pipeline
-	1. Input Data
-		- Images or Images Frame
-	2. Pre-Processing
-		- Noice Reduction
-		- Color Correction
-		- Scaling
-	3. Selecting Areas of Interest
-		- Face Reduction
-		- Image Cropping
-	4. Feature Extraction
-		- Finding Facial Markers (mouth, eyes...etc)
-	5. Prediction/Recognition
-		- Facial Expression Recognition
-		- Emotion Prediction
-	6. ACTION!
+#### Computer Vision Pipeline
+1. Input Data
+	* Images or Images Frame  
+2. Pre-Processing
+	* Noice Reduction
+	* Color Correction
+	* Scaling  
+3. Selecting Areas of Interest
+	* Face Reduction
+	* Image Cropping  
+4. Feature Extraction  
+	* Finding Facial Markers (mouth, eyes...etc)  
+5. Prediction/Recognition
+	* Facial Expression Recognition
+	* Emotion Prediction
+6. ACTION!  
 
 
 _Pre-Processing_
@@ -34,7 +34,7 @@ Color to Grayscale
 	1. Grayscale is more useful in recognizing objects.
 	2. Color images are harder to analyze and wake up more space in memory.
 
-Intensity
+#### Intensity
 - measure of lightness and darkness in an image
 - Patterns in lightness and darkness define the shape and characteristics of many objects
 - intensity alone can provide enough information to identify objects and interpret an image correctly
@@ -101,12 +101,12 @@ K-Means Clustering
 
 
 ## Links
-[Affectiva's JS SDK documentation](https://affectiva.readme.io/docs/getting-started-with-the-emotion-sdk-for-javascript)
-[Image Coordinat Systems - Matlab documentation](https://www.mathworks.com/help/images/image-coordinate-systems.html)
-[OpenCV Website](http://opencv.org/about.html)
-[OpenCV Documentation](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
-[OpenCV Contour Features](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_properties/py_contour_properties.html)
-[OpenCV Probabilistic Hough Transform](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html)
-[OpenCV K-Means](http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_ml/py_kmeans/py_kmeans_opencv/py_kmeans_opencv.html)
-[Latest CNN Segmentation Techniques](https://blog.athelas.com/a-brief-history-of-cnns-in-image-segmentation-from-r-cnn-to-mask-r-cnn-34ea83205de4)
+* [Affectiva's JS SDK documentation](https://affectiva.readme.io/docs/getting-started-with-the-emotion-sdk-for-javascript)
+* [Image Coordinat Systems - Matlab documentation](https://www.mathworks.com/help/images/image-coordinate-systems.html)
+* [OpenCV Website](http://opencv.org/about.html)
+* [OpenCV Documentation](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
+* [OpenCV Contour Features](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_properties/py_contour_properties.html)
+* [OpenCV Probabilistic Hough Transform](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html)
+* [OpenCV K-Means](http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_ml/py_kmeans/py_kmeans_opencv/py_kmeans_opencv.html)
+* [Latest CNN Segmentation Techniques](https://blog.athelas.com/a-brief-history-of-cnns-in-image-segmentation-from-r-cnn-to-mask-r-cnn-34ea83205de4)
 
