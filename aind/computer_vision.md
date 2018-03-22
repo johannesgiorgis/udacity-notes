@@ -3,11 +3,11 @@
 ## Lesson 6 - Mimic Me!
 Project: [AIND-CV-Mimic](https://github.com/udacity/AIND-CV-Mimic)
 
-<br>
+<br/>
 ## Lesson 7 - Image Representation and Analysis
 Computer Vision used in AI systems to visually perceive the world by gathering images, analyzing data, and eventually responding to it.
 
-<br>
+<br/>
 #### Computer Vision Pipeline
 1. Input Data
 	* Images or Images Frame  
