@@ -1,4 +1,5 @@
-
+# AIND - Computer Vision Notes
+This contains notes and references from Udactiy AIND Term 2's Computer Vision section.
 
 ## Lesson 6 - Mimic Me!
 Project: [AIND-CV-Mimic](https://github.com/udacity/AIND-CV-Mimic)
