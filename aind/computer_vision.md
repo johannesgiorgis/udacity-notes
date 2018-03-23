@@ -4,6 +4,7 @@
 Project: [AIND-CV-Mimic](https://github.com/udacity/AIND-CV-Mimic)
 
 
+
 ## Lesson 7 - Image Representation and Analysis
 Computer Vision used in AI systems to visually perceive the world by gathering images, analyzing data, and eventually responding to it.
 
@@ -57,6 +58,36 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - image coordinate system: images are 2 dimensional and lie on the x-y plane, origin (0, 0) is at the top left of the image
 
 
+**Quiz:**  
+- Move the image 100 pixels up: `G(x,y) = F(x, y - 100)`  
+- Darken the image: `G(x,y) = 0.5 * F(x, y)`  
+- Create a purely black and white image (no gray): `G(x,y) = {0 if F(x,y) < 150, and 255 otherwise`  
+- Move the image 100 pixels down: `G(x,y) = F(x, y+100)`  
+- Subtract another image F2(x, y) of the same size from the original image: `G(x,y) = F(x,y) - F2(x,y)`
+
+
+#### Color Thresholds
+- Use information about the colors in an image to isolate a particular area  
+- example of CV pipeline step: selecting areas of interest  
+- select an area of interest using a color threshold  
+- Color Threshold used in number of applications  
+	- Computer graphics  
+	- Video  
+- Commonly used with bue screen
+- Blue screen similar to green screen is used to layer two images or video streams based on identifying and replacing a large blue area.
+- How does it work?
+	- Isolate blue background
+	- Replace blue area with an image of your choosing
+
+
+#### Coding a Blue Screen
+- OpenCV is a popular computer vision library that has many built in tools for image analysis and understanding
+- **Why BGR instead of RGB?**
+	- OpenCV reads in images in BGR format vs RGB as BGR color format was popular among camera manufacturers and image software providers when it was being developed
+	- The red channel considered one of the least import color channels, so was listed last
+	- The standard has changed and most image software and cameras use RGB format
+	- It is good practice to intially convert BGR images to RGB before analyzing and manipulating them
+
 
 ## Lesson 8 - Image Segmentation
 #### Image Segmentation:
@@ -103,10 +134,13 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - convergence is defined by us - either by number of iterations or number of times center points have moved
 
 
+
 ## Links
 - [Affectiva's JS SDK documentation](https://affectiva.readme.io/docs/getting-started-with-the-emotion-sdk-for-javascript)
-- [Image Coordinat Systems - Matlab documentation](https://www.mathworks.com/help/images/image-coordinate-systems.html)
+- [Image Coordinate Systems - Matlab documentation](https://www.mathworks.com/help/images/image-coordinate-systems.html)
+- [OpenCV](http://opencv.org/)
 - [OpenCV Website](http://opencv.org/about.html)
+- [OpenCV cvtColor](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html)
 - [OpenCV Documentation](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
 - [OpenCV Contour Features](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_properties/py_contour_properties.html)
 - [OpenCV Probabilistic Hough Transform](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html)
