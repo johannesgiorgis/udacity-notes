@@ -88,6 +88,108 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 	- The red channel considered one of the least import color channels, so was listed last
 	- The standard has changed and most image software and cameras use RGB format
 	- It is good practice to intially convert BGR images to RGB before analyzing and manipulating them
+- Good practice to always make a copy of the image to avoid modifying original image
+- Masks are a common way to isolate a selected area of interest and do something with that area
+
+
+#### Color Spaces and Transforms
+- We saw how to detect a blue screen background
+- This detection assumed
+	- Scene was very well lit
+	- Screen was a very consitent blue
+- This would not work under varying light conditions
+- So how can we consistently detect objects under varying light conditions?
+	- there are many other ways to represent colors in an image besides red, blue, and green values.
+	- these different color representations are often called 'color spaces'
+- Color Spaces
+	- 3D space where any color can be represented by a 3D coordinate of R, G, and B values.
+- Other Color Spaces:
+	- HSV: Hue, Saturation, Value
+	- HLS: Hue, Lightness, Saturation
+- HSV:
+	- Isolates the Value (V) component, which varies the most under different lighting conditions
+	- The Hue (H) channel stays fairly consistent in shadow or excessive brightness
+- To select the most accurate color boundaries, it's often useful to use a color picker and choose the color boundaries that define the region you want to select
+- HSV space is more valuable in selecting an area under varying light conditions
+
+
+#### Geometric Transformations
+- Move pixels around in an image based on a mathematical formula
+- Useful for changing an image to a desired perspective - e.g. taking an angled image of a text and transforming it to a straight version
+- Transforms the Z-coordinate of the object points, which changes that object's 2D image representation
+- It warps the image and effectively drags points towards or pushes them away from the camera to change the apparent perspective
+- It can also transform the X and Y image pixels so that the entire image is rotated or moved slightly from the original perspective
+- Transforming the perspective of an image allows you to more reliably measure or recognize certain image traits
+	- measure the curvature of a road lane from a bird's eye view of a road
+	- more easily read important text that's written at an angle
+- Common use is in scanning and aligning text in a document - e.g. banks and reading/scanning checks, apps that scan/read everything
+- Computer vision is used to align document scans and improve readabililty
+- Business Card Reader
+	- Take a picture of a business card
+	- Straighten and align the image
+	- Use text recognition to automatically read in contact info
+
+
+#### Filters Revisited
+- In addition to taking advantage of color informaion and moving pixels around, we also have knowledge about patterns of intensity in an image. We can use this knowledge to detect other areas of visual traits of interest
+- Edges occur when an image changes from a very dark to light area
+- These edges often define object boundaries which help us distinguish and eventually identity these objects
+- Edge detection filters also known as High-pass Filters. They detect big changes in intensity or color in an image and produce an output that shows these edges
+- Low-pass Filters used to preprocess an image by reducing noise or unwanted traits in an image
+
+
+#### Frequency in Images
+- Frequency in images is a rate of change
+- High frequency image is one where the intensity changes a lot
+- Low frequency image may be one that is relatively uniform in  brightness or changes very slowly
+- Most images have both high-frequency and low-frequency components.
+
+
+#### High-pass Filters
+- Filters used to filter out unwanted or irrelevant information in an image OR to amplify features like object boundaries or other distinguishing traits.
+- Sharpen an image
+- Enhance _high-frequency_ parts of an image
+	- areas where the levels of intensity in neighboring pixels rapidly change like from very dark to very light pixels
+- Since we're looking at patterns of intensity, the filters will operate on grayscale images that represent this information and display patterns of lightness and darkness in a simple format
+- A high-pass filter will block out areas where there is no or little cahnge in intensity and turn these pixels black. In areas where a pixel is way brighter than its immediate neighbors, it will enhance that change and create a line. These emphasizes edges.
+- Edges are areas in an image where the intensity changes very quickly and they often indicate object boundaries
+
+
+**Convolution Kernels**  
+- a kernel is a matrix of numbers that modifies an image  
+- for edge detection, it is important all the edges add up to 0, because this filter is computing the difference or cahnge between neighboring pixels. Differences are calculated by subtracting pixel values from one another  
+- If these kernel values don't add up to 0, the calculated difference will be positively or negatively weighted, which will have the effect of brightening or darkening the entire filtered image respectively  
+- Kernel convolution is an important operation in Computer Vision Applications. It is the basis for convolutional neural networks.  
+	- Involves taking a kernel, a small grid of numbers and passing it over an image pixel by pixel transforming it based on what these numbers are  
+	- By changing these numbers, we can create many different effects from edge detection to blurring an image  
+- Kernel convolution relies on centering a pixel and looking at it's surrounding neighbords. So how do you handle image corner or edges?  
+	- Extend _(default)_: the nearest border pixels are conceptually extended as far as necessary to provide values for the convolution  
+	- Wrap: The image is conceptually wrapped (or tiled) and values are taken from the opposite edge or corner  
+	- Crop: Any pixel in the output image which would require values from beyond the edge is skipped. Output image can be slightly smaller  
+
+**Quiz**  
+- How best to find and enhance horizontal edges and lines in an image?  
+	- A kernel that finds the difference between the top and bottom edges surrounding a given pixel  
+
+
+#### Gradients and Sobel Filters
+- Gradients are a measure of intensity change in an image; they generally mark object boundaries and changing area of light and dark
+- Sobel filter is very commonly used in edge detection and in finding patterns in intensity in an image
+	- Applying a Sobel filter to an image is a way of **taking (an approximation) of the derivative of the image** in the _x_ or _y_ direction
+	- Taking the gradient in the _x_ direction emphasizes edges closer to vertical
+	- Taking the gradient in the _y_ dierction emphasizes edges closer to horizontal
+	- It also detects which edges are _strongest_. This is encapsulated by the **magnitude** of the gradient. A stronger edge has a greater magnitude
+
+
+#### Low-pass Filters
+- Noise in an image appears as speckle or discoloration in an image
+- Noise might mess with processing steps:
+	- Edge detection when high pass filters can amplify noise if it's not removed first
+- Most common way to remove noise is via a low-pass filter
+- Low-pass filter can
+	- Blur/smooth an image
+	- Block high-frequency parts of an image
+- Very useful in medical images which typically have noise that is reduced by the imagery machinery or by a moving human subject
 
 
 ## Lesson 8 - Image Segmentation
@@ -142,6 +244,11 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - [OpenCV](http://opencv.org/)
 - [OpenCV Website](http://opencv.org/about.html)
 - [OpenCV cvtColor](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html)
+- [Color Picker](https://www.w3schools.com/colors/colors_picker.asp)
+- [Transformation Matrix](https://en.wikipedia.org/wiki/Transformation_matrix)
+- [OpenCV Geometric Transformations](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.html)
+- [OpenCV filter2D](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html)
+
 - [OpenCV Documentation](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
 - [OpenCV Contour Features](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_properties/py_contour_properties.html)
 - [OpenCV Probabilistic Hough Transform](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html)
