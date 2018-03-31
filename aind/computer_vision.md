@@ -190,6 +190,53 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 	- Blur/smooth an image
 	- Block high-frequency parts of an image
 - Very useful in medical images which typically have noise that is reduced by the imagery machinery or by a moving human subject
+- Low Pass Filters
+	- Averaging Filter: 3 x 3 kernel with weights that send the same amount to a pixel and its surrounding pixels
+	- Typically take an average and not a difference as high pass filters do, so their components should all add up to one
+	- This preserves the image brightness and that it doesn't get brighter or darker overall
+	- If surrounding pixels are mostly brighter than the center pixel, the new output pixel value is brighter as well
+	- we get an average to smoothed out image with fewer abrupt changes in intensity
+	- this is useful for blowing out noise or making a background area within a certain intensity range look more uniform
+	- Used in Photoshop to soften and blur parts of an image
+
+
+#### Gaussian Blur
+- Blur/smooth an image
+- Blocks high-frequency parts of an image
+- Preserves edges! (difference from Low-pass filters)
+- Perhaps the most frequently used low-pass filter in computer vision applications
+- a weighted average that gives the most weight to the center pixel while still taking into account the surrounding pixels more so depending on how close they are to the center
+
+
+#### Canny Edge Detector
+- Edge Detection
+	1. grayscale
+	2. low-pass filter
+	3. high-pass filter
+	4. binary threshold
+- Edge detection still a complex problem even with all these tools used together. We have to think about:
+	- What level of intensity change constitutes an edge?
+	- How can we consistenly represent thick and thin edges?
+- Canny Edge Detector
+	- One of the best and most frequently used edge detectors that takes all of these questions into account is the canny edge detector
+	- Widely used and accurate edge detection algorithm
+	- Goes through a series of steps that consistenly produce accurately detected edges
+		1. **Filters our noise** using a Gaussian blur
+		2. **Finds the strength and direction of edges** using Sobel filters
+		3. **Applies non-maximum supression** to isolate the strongest edges and thin them to one-pixel wide lines
+		4. Uses **hysteresis to isolate the best edges**
+- Hysteresis is a double thresholding process
+	- we define a high threshold that allows strong edges to pass through
+	- we define a low threshold to discard any edge below this threshold
+	- an edge whose strength falls in between this low threshold and high threshold will be kept only when it's connected to another strong edge
+	- Canny eliminates weak edges and noise; isolates edges that are most connected and are therefore most likely to be part of an object boundary
+
+
+#### Review
+- treating images as functions so we can perform operations on pixel values and locations to transform an image
+- we transformed the color and geometry of images and filtered our images to enhance the _most important_ information
+- we learned how to implement one BIG step of the computer vision pipeline: **Pre-processing**
+
 
 
 ## Lesson 8 - Image Segmentation
@@ -237,6 +284,11 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - convergence is defined by us - either by number of iterations or number of times center points have moved
 
 
+#### Review
+- Looked selecting aeras by using information about color, geometry, and patterns of intensity in images
+- Went through many **image segmentation** techniques that move us closer to the end of the pipeline: object recognition, and scene understanding
+
+
 
 ## Links
 - [Affectiva's JS SDK documentation](https://affectiva.readme.io/docs/getting-started-with-the-emotion-sdk-for-javascript)
@@ -248,6 +300,9 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - [Transformation Matrix](https://en.wikipedia.org/wiki/Transformation_matrix)
 - [OpenCV Geometric Transformations](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.html)
 - [OpenCV filter2D](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html)
+- [Gaussian Blur](https://en.wikipedia.org/wiki/Gaussian_blur)
+- [OpenCV GaussianBlur](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html#gaussian-filtering)
+- [OpenCV Canny](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_canny/py_canny.html)
 
 - [OpenCV Documentation](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_table_of_contents_contours/py_table_of_contents_contours.html)
 - [OpenCV Contour Features](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_contours/py_contour_properties/py_contour_properties.html)
