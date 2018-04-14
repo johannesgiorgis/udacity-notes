@@ -320,8 +320,167 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 	- edges
 	- corners
 	- blobs
+- Edges: areas in an image where the intensity abruptly changes. Also known as areas that have a high intensity gradient
+- Corners: found at the intersection of 2 edges, form what looks like a corner or sharp point
+- Blobs: Region-based features that may include areas of extreme highs or lows in intensity or areas of a unique texture
+- We are most interested in detecting corners. They are the most repeatable features, they are easy to recognize given two or more images of the same scene
+- A corner represents a point where two edges change. If we move either of those up or down, the corner patch will not match exactly with that area. Corners are easiest to match and make good features because they are so unique
 
 
+#### Corner Detectors
+- When building an edge detector, we looked at the difference in intensity between neighboring pixels. An edge was detected if there was a big and abrupt change in intensity in any one direction - up or down, left or right, or diagonal.
+- Change in intensity in an image is also referred to as the image gradient
+- We can also detect corners by relying on these gradient measurements
+- Corners are the intersection of two edges. We can detect them by taking a window which is generally a square area that contains a group of pixels and looking at where the gradient is high in all directions.
+- Each of these gradient measurements has an associated magnitude which is a _measurement of the strength of the gradient_, and a direction which is the _direction of the change in intensity_
+- Both of these values can be calculated by Sobel operators
+- Sobel operators take the intensity change/gradient of an image in the x and y direction separately
+- To get magnitude and direction of the total gradient from the x and y gradients, we convert from image space to polar coordinates
+- Mini corner detectors:
+	1. Shift a window around an area in an image
+	2. Check for a **big variation** in the direction and magnitude of the calculated gradients. This large variation identifies a corner	
+- Dilation enlarges bright regions or regions in the foreground so we can see them better
+- Corners alone can be useful for many types of analysis and geometric transformations
+
+
+#### Dilation and Erosion
+- Dilation and erosion known as **morphological operations** - often performed on binary images, similar to contour detection
+- Dilation enlarges bright, white areas in an image by adding pixels to the perceived boundaries of objects in that image
+- Erosion removes pixels along object boundaries and shrinks the size of objects
+- Both operations are performed in sequence often to enhance important object traits (similar to how low and high pass filters are combined together)
+- Dilate
+	- via _dilate_ function
+	- 3 inputs: an ordinary binary image, kernel that determines the size of the dilation (None results in default size), number of iterations to perform the dilation (typically 1)
+- Erode
+	- via _erode_ function
+	- 3 inputs: an ordinary binary image, kernel that determines the size of the erosion (None results in default size), number of iterations to perform the erosion (typically 1)
+- One combination of erosion and dilation operations is **opening**, which is **erosion followed by dilation**. Useful in noise reduction
+	- use _morphologyEx_ function
+	- `opening = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)`
+- Another combination is **closing** - **dilation followed by erosion**. Useful in _closing_ small holes or dark areas within an object
+- Many of these operations try to extract better or less noisy information about the shape of an object or enlarge important features
+
+
+#### Feature Vectors
+- Object detection relies on recognizing distinct sets of features, so we have to look at distinct sets of features often called **feature vectors**
+- If you look at the direction of multiple gradients around the center point of an image, you can get a feature vector that makes for a robust representation of the shape of an object
+- E.g. image of trapezoid. Break up its edge detected image into a grid of cells and look at the direction of the gradient of each cell with respect to the trapezoid, we can flatten this data and create a 1D array. This is a feature vector, specifically a vector of gradient directions
+- Same concept can be applied to a circle as well
+- These 2 feature vectors exactly represent these two shapes (trapezoid and circle)
+- Ideally, to accurately identify any circle or trapezoid at different sizes or from different perspectives, these vectors should allow for enough flexibility to detect some variation in these shapes while remaining distinct enough to be able to distinguish different shapes
+
+
+#### HOG
+- Many algorithms designed to extract spatial features and identify objects using information about image gradients
+- 1 illustrative technique is HOG - Histogram of Oriented Gradients
+- Histogram is a graphical representation of the distribution of data
+- Oriented Gradients is the direction of image gradients
+- HOG should produce a histogram of gradient directions in an image
+	1. Calculates the magnitude and direction of the gradient at each pixel
+	2. Groups these pixels into square cells (typically 8x8)
+	3. Counts how many gradients in each cell fall in a certain range of orientation and sums the magnitude of these gradients so that the strength of the gradients are accounted for
+	4. Places all that directional data into a histogram
+- HOG is actually a feature vector
+- Next step is to use these HOG features to train a classifier. Among images of the same object at different scales and orientations, this same pattern of HOG features can be used to detect the object wherever and however it appears
+
+
+#### Implementing HOG
+- HOG also referred to as a type of **feature descriptor** - a simplified representation of an image that is made up of extracted features (that highlight the important parts of an image) and that discards extraneous information
+- Number of steps involved to create a HOG feature vector
+- Many image sets _require_ pre-processing as a first step to ensure consistency in size and color
+- Implementing HOG
+	1. Calculate image gradient at each pixel (magnitude & direction) via Sobel filters (use OpenCV's Sobel function to avoid creating your own)
+	2. Define how we divide this data into a histogram. Use 9 bins for 9 different ranges of gradient directions
+	3. Calculate the histogram for each cell. We have 64 total 8x8 cells, for each of these we calculate a histogram of directions (9 bins) weighted with their magnitude. So each cell will produce a feature vector containing 9 values. 64 of those together give us a complete image feature vector containing 576 values. This is _almost_ the feature vector we use to train our data.
+	4. One more step HOG does before creating the feature vector is to perform _block normalization_. A block is a larger area than a cell and checks different positions for the cell, determining how much they overlap. So HOG features for all cells in each block are computed at each block position and the block shifts across and down through the image cell by cell.
+- The actual number of features in your final feature vector will be the total number of block positions multiplied by the number of cells per block times the number of orientations: `7 x 7 x 2 x 2 x 9 = 1764` [Where is the 7 coming from?]
+- Example
+	- Pixels per cell: `8 x 8`
+	- Cells per block: `2 x 2`
+	- Number of orientations: `9`
+- OpenCV has a function to help us perform the complete HOG algorithm with defined blocks and cells - `cv2.HOGDescriptor(win_size, block_size, block_stride, cell_size, n_bins)`
+- The feature vector that this produces is what you can use to **train a classifier**!
+- QUIZ: Histograms are often used in forming useful features because of how they divide data into ranges using bins
+	- Bins reduce the dimensionality of data; they represent image data in a more compact way
+	- Grouping data into ranges allows for more flexibility in identifying similar objects based on their feature vectors
+
+
+#### Object Recognition
+- Now that we learned how to detect features from a variety of images, we can use them to classify objects
+- Let's start by classifying a simple object - a banana
+- We can build a simple classifier and train it to learn the difference between two types of image data - positive and negative data.
+- Positive data are areas that include a banana
+- Negative data area areas that don't include a banana
+- We need labeled data that contains examples of both scenarios
+
+
+#### Train a Classifier
+- There are a number of ways to create a classifier
+- In Machine Learning, we train a classifier by using Supervised Learning to recognize certain sets of features.
+- Supervised Learning uses labeled data to check if it's classifying data correctly
+- We need a big training set with images of the object we want to identify and images without it. We needs lots of positive and negative data
+- Procedure
+	- For each image in this training set, we will extract features and give them to a training algorithm along with their corresponding labels
+	- Training algorithm will initialize a model and tweak its parameters as it tries to correctly match feature vectors with their correct labels
+	- Iterative process where the model is given all this training data and predicts, based on a given feature vector, what its label will be.
+	- Then it compares this with the actual true label. If the algorithm is wrong and has some error in its prediction, the model will adjust its parameters so that it correctly labels that feature vector.
+	- It does this again and again until the error falls below a threshold or enough iterations have been passed
+	- Model is said to be sufficiently trained
+	- Next step is to see how this model performs on unseen data using test set of data, which we know the labels but our model doesn't.
+	- We look at the test error to see how accurate our model truly is
+- There are many great deep learning models such as convolutional neural networks that excel at recognizing patterns and features and detecting many types of objects
+- There are also faster models that use some of the same kind of machine learning data separation techniques we've seen before, including:
+	- Support Vector Machines (work well with HOG features)
+	- Decision Trees
+- There are other models you could use as well as combinations of models that you might choose depending on how fast or complex you may want a model to be.
+
+
+#### Support Vector Machine Classifier
+- SVM's work to best separate labeled data into groups and train until they reach an acceptably low error rate
+- In the case of images and HOG feature classification, the SVM will train on sets of labeled images that also have associated HOG feature vectors. It will learn the association and try to classify new images by looking at their HOG feature vector.
+- Using feature vectors is a lot faster than looking at large image files in their entirety	
+- SVM's in OpenCV
+	- To create an SVM in OpenCV, we define it's parameters and call a constructor
+	- Next, prepare training data, associating images with their labels and computed HOG feature vectors. You should have as many sets of feature vectors for as many labels as you want to detect
+	- Finally, you'll need to test your model to verify it's classification accuracy
+
+
+#### Haar Cascades
+- Haar Cascades, an algorithm that trains on many positive images and negative images
+	- It detects Haar features by applying a Haar feature detector (e.g. vertical line detector)
+	- It then performs classification on the entire image
+	- If it doesn't get enough of a feature detection response, it classifies an area of an image as 'not face' and discards it
+	- It feeds this reduced image area to the next feature detector (e.g. rectangle feature detection) and classified the image again, discarding irrelevant non-face areas at every step
+	- This is called a **cascade of classifiers**
+- Haar features are gradient measurements that look at rectangular regions around a certain pixel area and somewhat subtract these areas to calculate a pixel difference. Similar to how convolutional kernels work.
+- Haar features detect patterns like edges, lines and more complex rectangular patterns
+- In face detection, lines and rectangles are especially useful features because patterns of alternating bright and dark areas define a lot of features on a face
+- Haar features effectively identify extreme areas of bright and dark on a face
+- Haar cascades focus on processing and recognizing only the area in an image that's been classified as part of a face already and quickly throwing out irrelevant image data makes this algorithm very fast
+- It is fast enough for processing a video stream in real time on a laptop computer
+- Haar cascades may also be used for selecting an area of interest for further processing
+
+
+#### Face Detection with OpenCV
+- OpenCV comes with a few Haar Cascade detectors already trained
+
+```python
+import numpy as np
+import cv2
+
+## Load in the face detector XML file
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+# Read in an image
+image = cv2.imread('face1.jpg')
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+#Convert to grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Detect the faces in the image
+faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+```
 
 
 ## Links
@@ -343,3 +502,10 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 - [OpenCV K-Means](http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_ml/py_kmeans/py_kmeans_opencv/py_kmeans_opencv.html)
 - [Latest CNN Segmentation Techniques](https://blog.athelas.com/a-brief-history-of-cnns-in-image-segmentation-from-r-cnn-to-mask-r-cnn-34ea83205de4)
 
+- [OpenCV Corner Detection](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_feature2d/py_features_harris/py_features_harris.html)
+- [Histograms in OpenCV](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_table_of_contents_histograms/py_table_of_contents_histograms.html)
+- [OpenCV Sobel function](http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_gradients/py_gradients.html)
+- [Support Vector Machine Wiki](https://en.wikipedia.org/wiki/Support_vector_machine)
+- [Kaggle](https://www.kaggle.com/)
+- [ImageNet](http://www.image-net.org/)
+- [OpenCV Haar Cascades](http://docs.opencv.org/3.0-beta/doc/user_guide/ug_traincascade.html?highlight=train%20cascade)
