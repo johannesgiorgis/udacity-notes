@@ -463,7 +463,7 @@ Most simple identification tasks rely on identifying the shape and intensity pat
 
 #### Face Detection with OpenCV
 - OpenCV comes with a few Haar Cascade detectors already trained
-
+- code below detects faces
 ```python
 import numpy as np
 import cv2
@@ -481,6 +481,77 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 # Detect the faces in the image
 faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 ```
+
+
+#### Motion
+- Same processing techniques can be applied to video streams as static images
+- A video stream is made up of a sequence of image frames
+- One unique aspect of these sequences of image frames is the idea of motion
+- To create an intelligent computer vision system, we also want to give computers a way to understand motion
+- This useful in a number of applications
+	- isolate moving pedestrians from a still background
+	- intelligent navigation systems
+	- movement prediction models
+	- distinguishing behaviors like running vs walking in a given video
+- One way to track objects over time and detect motion is by extracting certain features and observing how they change from one frame to the next
+
+
+#### Optical Flow
+- Used in many tracking and motion analysis applications
+- It works by assuming 2 things about image frames
+	1. Pixel intensities of an object stay consistent between frames
+	2. Neighboring pixels have similar motion
+- How it works:
+	- It looks at interesting points (corners or particularly bright pixels) and tracks them from one frame to the next
+	- Tracking a point provides information about the **speed** of movement and data that can be used to **predict the future location** of the point
+- Use Optical flow for tracking applications:
+	- Hand gesture recognition
+	- Tracking vehicle movement
+	- Running vs. Walking
+	- Safety applications by predicting the motion of things and performing obstacle avoidance like in the case of self-driving cars
+	- Tracking eye movement for virtual reality games and advertising
+
+
+#### Object Tracking
+- Optical flow uses object features and and an area of perceived movement to track points and objects in consecutive frames
+- To perform optical flow on a video or series of images, we first identify a set of feature points to track via a Harris Corner Detector or other feature detector. Next, at each time step or video frame, we track those points using optical flow
+- OpenCV provides the function `calcOpticalFlowPyrLK()` for this purpose; it takes in 3 parameters
+	- previous frame
+	- previous feature points
+	- next frame
+- Using only this knowledge, it returns the predicted _next_ points in the future frame
+- This way, we can track any moving object and determine how fast it's going and where it's likely to move next!
+
+
+#### Outro
+- Solid understanding of the computer vision pipeline from start to finish
+- Starting from image processing techniques, built on that foundational knowledge to see how to recognize objects and interpret images
+- With these skills, you'll be able to build computer vision applications of your own
+- Object recognition and scene understanding are still active areas of research
+- There are so many things to create in the world of robotics, medicine, assistive technology, virtual reality, and emotionally intelligent systems
+
+
+## Project: CV Capstone Project
+- [Project Github Repository](https://github.com/udacity/AIND-CV-FacialKeypoints)
+- [OpenCV History Wikipedia](https://en.wikipedia.org/wiki/OpenCV#History)
+- [Haar feature-based cascade classifiers](http://docs.opencv.org/trunk/d7/d8b/tutorial_py_face_detection.html)
+- [Haar Cascades Pre-trained Architectures Github Repository](https://github.com/opencv/opencv/tree/master/data/haarcascades)
+- [OpenCV Colorspaces](http://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html)
+- [Stackoverflow Recommended values for OpenCV DetectMultiScale Parameters](https://stackoverflow.com/questions/20801015/recommended-values-for-opencv-detectmultiscale-parameters)
+- [Image Noise](https://digital-photography-school.com/how-to-avoid-and-reduce-noise-in-your-images/)
+- [Image Denoising Example](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_photo/py_non_local_means/py_non_local_means.html)
+- [Gaussian blur Wikipedia](https://en.wikipedia.org/wiki/Gaussian_blur#Common_uses)
+- [OpenCV Canny Detector](http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/canny_detector/canny_detector.html)
+- [OpenCV Smoothing Images](https://docs.opencv.org/3.1.0/d4/d13/tutorial_py_filtering.html)
+- [Google Street View Maps](https://www.google.com/streetview/)
+- [Kaggle Facial Keypoints Detection Data](https://www.kaggle.com/c/facial-keypoints-detection/data)
+- [Using CNNs to Detect Facial Keypoints Tutorial](http://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/)
+
+**Keras**  
+- [Sequential Model Methods](https://keras.io/models/sequential/#sequential-model-methods)  
+- [Optimizers](https://keras.io/optimizers/)  
+- [How can I save a Keras Model](https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model)  
+- [Display Deep Learning Model Training History in Keras](https://machinelearningmastery.com/display-deep-learning-model-training-history-in-keras/)  
 
 
 ## Links
@@ -509,3 +580,4 @@ faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 - [Kaggle](https://www.kaggle.com/)
 - [ImageNet](http://www.image-net.org/)
 - [OpenCV Haar Cascades](http://docs.opencv.org/3.0-beta/doc/user_guide/ug_traincascade.html?highlight=train%20cascade)
+- [OpenCV Object Tracking](http://docs.opencv.org/trunk/d7/d8b/tutorial_py_lucas_kanade.html)
